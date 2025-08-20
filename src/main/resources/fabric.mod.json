@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "midi-mod",
+	"version": "${version}",
+	"name": "midi mod",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/midi-mod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.br3adjam.midi.MidiMod"
+		],
+		"client": [
+			"com.br3adjam.midi.MidiModClient"
+		]
+	},
+	"mixins": [
+		"midi-mod.mixins.json",
+		{
+			"config": "midi-mod.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.17.2",
+		"minecraft": "~1.21.8",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
