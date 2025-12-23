@@ -119,7 +119,7 @@ public class MidiMod implements ModInitializer {
 	private void setTone(ServerWorld world, BlockPos notePos, int pitch){//12=middle c
 		//MAXIMUM OF 30 NOTES(15 ON LEFT OF MIDDLE C AND 15 ON AND TO THE RIGHT OF MIDDLE C)
 		world.setBlockState(notePos, Blocks.NOTE_BLOCK.getDefaultState()
-				.with(net.minecraft.block.NoteBlock.PITCH, pitch));
+				.with(net.minecraft.block.NoteBlock.NOTE, pitch));
 	}
 
 	public class RecordingSession {
