@@ -4,15 +4,9 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NoteBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -113,18 +107,11 @@ public class MidiMod implements ModInitializer {
 		int octave = notes.get(note);
 
 		world.setBlockState(pos, Blocks.NOTE_BLOCK.getDefaultState()
-						.with(NoteBlock.NOTE, ????);
+				.with(NoteBlock.NOTE, ????);
 		world.setBlockState(pos.down(), octaveNoteblock.get(octave).getDefaultState());
 		//default noteblock sound used due to my want for compatibility with vanilla
 	}
 
-	public class RecordingSession {
-		public final BlockPos anchor;
-		public int currentTick = 0;
 
-		public RecordingSession(BlockPos anchor) {
-			this.anchor = anchor;
-		}
-	}
 
 }
