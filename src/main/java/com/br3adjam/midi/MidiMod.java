@@ -1,26 +1,28 @@
 package com.br3adjam.midi;
 
-import javax.sound.midi.MidiDevice;
-import javax.sound.midi.MidiMessage;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.ShortMessage;
-
-
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.NoteBlock;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static net.minecraft.server.command.CommandManager.literal;
 import static net.minecraft.server.command.CommandManager.argument;
@@ -28,55 +30,45 @@ import static net.minecraft.server.command.CommandManager.argument;
 public class MidiMod implements ModInitializer {
 	public static final String MOD_ID = "midi-mod";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	private RecordingSession session = null;
+	public RecordingSession session = null;
+
+	//less than ideal map
+    public record McNote(int pitch, int octave) {}
+    Map<Integer, McNote> midiToMc = new HashMap<>();
+
+    //holy naming
+	private Map<Integer, Block> octaveNoteblock = Map.of(
+		1, Blocks.OAK_PLANKS,
+		2, Blocks.WHITE_WOOL,
+		3, Blocks.DIRT,
+		4, Blocks.DIRT,
+		5, Blocks.GLOWSTONE,
+		6, Blocks.CLAY,
+		7, Blocks.GOLD_BLOCK
+	);
 
 	@Override
-
-//	public void setNoteblock(int x,int y,int z){
-//		ServerWorld world = ctx.getSource().getWorld();
-//		BlockPos pos = new BlockPos(x, y, z);
-//		world.setBlockState(pos, Blocks.NOTE_BLOCK.getDefaultState());
-//	}
 	public void onInitialize() {
-		// setting up midi device
-		MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
-		for (MidiDevice.Info info : infos) {
-            MidiDevice device = null;
-            try {
-                device = MidiSystem.getMidiDevice(info);
-            } catch (MidiUnavailableException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                device.open();
-            } catch (MidiUnavailableException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                device.getTransmitter().setReceiver(new Receiver() {
-                    @Override
-                    public void send(MidiMessage message, long timeStamp) {
-                        if (message instanceof ShortMessage sm) {
-                            if (sm.getCommand() == ShortMessage.NOTE_ON) {
-                                int midiNote = sm.getData1();
-                                int velocity = sm.getData2();
-                                // enqueue for Minecraft tick builder
-                            }
-                        }
-                    }
 
-                    @Override
-                    public void close() {}
-                });
-            } catch (MidiUnavailableException e) {
-                throw new RuntimeException(e);
-            }
+
+        for (int midi = 0; midi <= 127; midi++) {
+            int noteBlock = midi - 54;
+
+            if (noteBlock < 0 || noteBlock > 24) continue;
+
+            int pitch = noteBlock % 12;
+            int octave = noteBlock / 12;
+
+            midiToMc.put(midi, new McNote(pitch, octave));
         }
+
+		// setting up midi device
 
 		// runs every game tick
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
 			if (session != null) {
-				placeNextTickBlocks(server.getOverworld());
+                ServerWorld world = server.getWorld(World.OVERWORLD);
+                update(world);
 				session.currentTick++;
 			}
 		});
@@ -101,7 +93,7 @@ public class MidiMod implements ModInitializer {
 		});
 	}
 
-	private void placeNextTickBlocks(ServerWorld world) {
+	private void update(ServerWorld world) {
 		if(session==null)return;
 
 		//place blocks at current tick
@@ -116,10 +108,14 @@ public class MidiMod implements ModInitializer {
 		}
 	}
 
-	private void setTone(ServerWorld world, BlockPos notePos, int pitch){//12=middle c
-		//MAXIMUM OF 30 NOTES(15 ON LEFT OF MIDDLE C AND 15 ON AND TO THE RIGHT OF MIDDLE C)
-		world.setBlockState(notePos, Blocks.NOTE_BLOCK.getDefaultState()
-				.with(net.minecraft.block.NoteBlock.NOTE, pitch));
+	private void setTone(ServerWorld world, BlockPos pos, String note){
+		//BlockPos notePos, int pitch
+		int octave = notes.get(note);
+
+		world.setBlockState(pos, Blocks.NOTE_BLOCK.getDefaultState()
+						.with(NoteBlock.NOTE, ????);
+		world.setBlockState(pos.down(), octaveNoteblock.get(octave).getDefaultState());
+		//default noteblock sound used due to my want for compatibility with vanilla
 	}
 
 	public class RecordingSession {
