@@ -9,14 +9,22 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.WorldLoader;
+import net.minecraft.util.thread.BlockableEventLoop;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import org.apache.logging.log4j.core.config.plugins.util.ResolverUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.MinecraftServer;
 
+import org.apache.logging.log4j.core.jmx.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static net.fabricmc.loader.impl.game.GameProviderHelper.getSource;
+
 public class Midi2noteblocks implements ModInitializer {
+
 	public static final String MOD_ID = "midi2noteblocks";
 
 	// This logger is used to write text to the console and the log file.
@@ -29,5 +37,6 @@ public class Midi2noteblocks implements ModInitializer {
 		LOGGER.info("Initializing midi2noteblocks");
 
         TestCommands.register();
+        // todo)) make proper functions in proper classes and packages + use interfaces
 	}
 }
