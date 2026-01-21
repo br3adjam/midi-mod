@@ -5,11 +5,14 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import com.mojang.brigadier.CommandDispatcher;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.ServerTickRateManager;
 import net.minecraft.server.WorldLoader;
+import net.minecraft.util.profiling.jfr.event.ServerTickTimeEvent;
 import net.minecraft.util.thread.BlockableEventLoop;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -37,6 +40,9 @@ public class Midi2noteblocks implements ModInitializer {
 		LOGGER.info("Initializing midi2noteblocks");
 
         TestCommands.register();
+
+        // todo)) add midi
+
         // todo)) make proper functions in proper classes and packages + use interfaces
 	}
 }
