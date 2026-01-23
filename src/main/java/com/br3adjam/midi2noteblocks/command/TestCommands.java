@@ -1,6 +1,7 @@
 package com.br3adjam.midi2noteblocks.command;
 
 import com.br3adjam.midi2noteblocks.world.BlockControl;
+import com.br3adjam.midi2noteblocks.world.TickHandler;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -17,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.ticks.ScheduledTick;
 
 public class TestCommands {
     private final CommandDispatcher<CommandSourceStack> dispatcher;
@@ -63,6 +65,12 @@ public class TestCommands {
                     )
             );
         });
+
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            dispatcher.register(Commands.literal("stop")
+                .executes(TestCommands::stop)
+            );
+        });
     }
 
     private static int placeNoteblock(CommandContext<CommandSourceStack> context) {
@@ -93,17 +101,26 @@ public class TestCommands {
         level.setBlock(startPos, Blocks.REDSTONE_TORCH.defaultBlockState(), 3);
 
         run = true;
+        System.out.println("run start");
 
         //place repeaters and redstone in chain each tick ( todo)) can tkae in midi + placement of noteblocks)
 
         while (run) {
-            BlockControl.placeNext(context);
+            if(TickHandler.nextTick) {
+                TickHandler.nextTick = false;
+                System.out.println("tick processed");
+                BlockControl.placeNext(context);
+                System.out.println("next placed");
+            }
+            
         }
         return 1;
     }
 
     private static int stop(CommandContext<CommandSourceStack> context) {
         run = false;
+        System.out.println("run stop");
+
         return 1;
     }
 

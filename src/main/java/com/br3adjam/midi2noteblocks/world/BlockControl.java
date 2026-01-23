@@ -37,5 +37,6 @@ public class BlockControl {
         level.setBlock(redstonePos, Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
 
         TestCommands.step++;
+        System.out.println("next step");
     }
 }

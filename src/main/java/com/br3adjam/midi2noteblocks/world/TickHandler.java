@@ -5,14 +5,15 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 
 public class TickHandler {
-
+    public static boolean nextTick = false;
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(TickHandler::onServerTick);
     }
 
     private static int onServerTick(MinecraftServer server) {
         if (TestCommands.run) {
-//            BlockControl.placeNext(); //todo)) fix/make work
+            nextTick = true; //todo)) fix/make work
+            System.out.println("next tick");
         }
         return 1;
     }
