@@ -26,17 +26,12 @@ public class BlockControl {
 
     }
 
-    public static void placeNext(CommandContext<CommandSourceStack> context) {
-        BlockPos startPos = BlockPosArgument.getBlockPos(context, "pos");
-        Direction direction = Direction.valueOf(StringArgumentType.getString(context, "direction"));
-
-        BlockPos repeaterPos = startPos.relative(direction.getAxis(), 2* TestCommands.step + 1);
-        BlockPos redstonePos = repeaterPos.relative(direction.getAxis(), 2* TestCommands.step + 2);
+    public static void placeNext(RedstoneGeneratorParams redstoneGeneratorParams) {
+        BlockPos repeaterPos = redstoneGeneratorParams.startPos.relative(redstoneGeneratorParams.direction.getAxis(), 2* redstoneGeneratorParams.step + 1);
+        BlockPos redstonePos = repeaterPos.relative(redstoneGeneratorParams.direction.getAxis(), 2* redstoneGeneratorParams.step + 2);
 
         level.setBlock(repeaterPos, Blocks.REPEATER.defaultBlockState(), 3);
         level.setBlock(redstonePos, Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
-
-        TestCommands.step++;
         System.out.println("next step");
     }
 }

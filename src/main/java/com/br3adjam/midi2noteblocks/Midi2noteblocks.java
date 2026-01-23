@@ -1,6 +1,7 @@
 package com.br3adjam.midi2noteblocks;
 
 import com.br3adjam.midi2noteblocks.command.TestCommands;
+import com.br3adjam.midi2noteblocks.world.TickHandler;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -40,6 +41,7 @@ public class Midi2noteblocks implements ModInitializer {
 		LOGGER.info("Initializing midi2noteblocks");
 
         TestCommands.register();
+        TickHandler.register();
 
         // todo)) add midi
 

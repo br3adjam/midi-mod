@@ -1,6 +1,7 @@
 package com.br3adjam.midi2noteblocks.command;
 
 import com.br3adjam.midi2noteblocks.world.BlockControl;
+import com.br3adjam.midi2noteblocks.world.RedstoneGeneratorParams;
 import com.br3adjam.midi2noteblocks.world.TickHandler;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -18,16 +19,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.ticks.ScheduledTick;
 
 public class TestCommands {
     private final CommandDispatcher<CommandSourceStack> dispatcher;
     private final CommandBuildContext registryAccess;
     private final Commands.CommandSelection environment;
-
-    public static int step = 0;
-
-    public static boolean run = false;
 
     public TestCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {
         this.dispatcher = dispatcher;
@@ -56,6 +52,7 @@ public class TestCommands {
             );
         });
 
+        // starts redstone generator
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(Commands.literal("start")
                     .then(Commands.argument("pos", BlockPosArgument.blockPos())
@@ -66,6 +63,7 @@ public class TestCommands {
             );
         });
 
+        // stops redstone generator
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(Commands.literal("stop")
                 .executes(TestCommands::stop)
@@ -91,34 +89,29 @@ public class TestCommands {
         return 1;
     }
 
-
     private static int start(CommandContext<CommandSourceStack> context) {
         BlockControl blockControl = new BlockControl(context.getSource().getLevel());
-        BlockPos startPos = BlockPosArgument.getBlockPos(context, "pos");
-        Direction direction = Direction.valueOf(StringArgumentType.getString(context, "direction"));
         Level level = context.getSource().getLevel();
 
-        level.setBlock(startPos, Blocks.REDSTONE_TORCH.defaultBlockState(), 3);
+        RedstoneGeneratorParams redstoneGeneratorParams = new RedstoneGeneratorParams(
+                BlockPosArgument.getBlockPos(context, "pos"),
+                Direction.valueOf(StringArgumentType.getString(context, "direction"))
+        );
 
-        run = true;
-        System.out.println("run start");
+
+        level.setBlock(redstoneGeneratorParams.startPos, Blocks.REDSTONE_TORCH.defaultBlockState(), 3);
 
         //place repeaters and redstone in chain each tick ( todo)) can tkae in midi + placement of noteblocks)
 
-        while (run) {
-            if(TickHandler.nextTick) {
-                TickHandler.nextTick = false;
-                System.out.println("tick processed");
-                BlockControl.placeNext(context);
-                System.out.println("next placed");
-            }
-            
-        }
+        System.out.println("start command ran");
+
+        TickHandler.redstoneGeneratorParams = redstoneGeneratorParams;
+
         return 1;
     }
 
     private static int stop(CommandContext<CommandSourceStack> context) {
-        run = false;
+        TickHandler.redstoneGeneratorParams = null;
         System.out.println("run stop");
 
         return 1;
