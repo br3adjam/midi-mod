@@ -4,12 +4,14 @@ import com.br3adjam.midi2noteblocks.command.TestCommands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.blocks.BlockStateArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.NoteBlock;
+import net.minecraft.world.level.block.RepeaterBlock;
 
 public class BlockControl {
     static Level level;
@@ -27,11 +29,24 @@ public class BlockControl {
     }
 
     public static void placeNext(RedstoneGeneratorParams redstoneGeneratorParams) {
-        BlockPos repeaterPos = redstoneGeneratorParams.startPos.relative(redstoneGeneratorParams.direction.getAxis(), 2* redstoneGeneratorParams.step + 1);
-        BlockPos redstonePos = repeaterPos.relative(redstoneGeneratorParams.direction.getAxis(), 2* redstoneGeneratorParams.step + 2);
+        BlockPos repeaterPos = redstoneGeneratorParams.startPos.relative(redstoneGeneratorParams.direction.getAxis(), 2*redstoneGeneratorParams.step + 1);
+        BlockPos redstonePos = repeaterPos.relative(redstoneGeneratorParams.direction.getAxis(), 1);
 
-        level.setBlock(repeaterPos, Blocks.REPEATER.defaultBlockState(), 3);
+        // todo)) make the redstone actually go in the direction it's supposed to
+
+        // wool
+        level.setBlock(repeaterPos.below(), Blocks.WHITE_WOOL.defaultBlockState(), 3);
+        // repeater
+        level.setBlock(repeaterPos, Blocks.REPEATER.defaultBlockState().
+                setValue(RepeaterBlock.FACING, redstoneGeneratorParams.direction), 3);
+
+        // wool
+        level.setBlock(redstonePos.below(), Blocks.WHITE_WOOL.defaultBlockState(), 3);
+        // redstone
         level.setBlock(redstonePos, Blocks.REDSTONE_WIRE.defaultBlockState(), 3);
+
+
+        redstoneGeneratorParams.step++;
         System.out.println("next step");
     }
 }

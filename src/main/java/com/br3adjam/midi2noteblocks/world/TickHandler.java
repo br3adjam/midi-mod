@@ -9,6 +9,9 @@ import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
 public class TickHandler {
     public static boolean nextTick = false;
     public static RedstoneGeneratorParams redstoneGeneratorParams;
+    public static int tickCount = 0;
+    public static final int DELAY_TICKS = 20; // 20 for testing
+
 
     public static void register() {
         ServerTickEvents.START_WORLD_TICK.register(TickHandler::onWorldTick);
@@ -20,9 +23,13 @@ public class TickHandler {
             return 1;
         }
 
-        System.out.println("tick processed");
-        BlockControl.placeNext(redstoneGeneratorParams);
-        System.out.println("next placed");
+        tickCount=(tickCount + 1) % DELAY_TICKS;
+        System.out.println("tick processed, tick count: " + tickCount);
+
+        if (tickCount == 0) {
+            BlockControl.placeNext(redstoneGeneratorParams);
+            System.out.println("next placed");
+        }
 
         return 1;
     }
