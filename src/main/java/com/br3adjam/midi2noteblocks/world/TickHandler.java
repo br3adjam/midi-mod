@@ -1,10 +1,8 @@
 package com.br3adjam.midi2noteblocks.world;
 
-import com.br3adjam.midi2noteblocks.command.TestCommands;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.tick.Tick;;
 
 public class TickHandler {
     public static boolean nextTick = false;
@@ -17,7 +15,7 @@ public class TickHandler {
         ServerTickEvents.START_WORLD_TICK.register(TickHandler::onWorldTick);
     }
 
-    private static int onWorldTick(ServerLevel level) {
+    private static int onWorldTick(ServerWorld world) {
         if (redstoneGeneratorParams == null) {
             System.out.println("redstoneGeneratorParams is null");
             return 1;
