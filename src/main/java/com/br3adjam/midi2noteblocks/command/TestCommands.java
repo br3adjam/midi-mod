@@ -34,9 +34,9 @@ import net.minecraft.util.math.Direction;
 
 import net.minecraft.network.*;
 import net.minecraft.network.listener.ClientPacketListener.*;
-import net.minecraft.server.network.ServerPlayerEntity.*;
-import net.minecraft.server.network.ServerPlayNetworkHandler.*;
-import net.minecraft.client.network.ClientPlayNetworkHandler.*; // for chatting??
+//import net.minecraft.server.network.ServerPlayerEntity.*;
+//import net.minecraft.server.network.ServerPlayNetworkHandler.*;
+//import net.minecraft.client.network.ClientPlayNetworkHandler.*; // for chatting??
 
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.world.World;
