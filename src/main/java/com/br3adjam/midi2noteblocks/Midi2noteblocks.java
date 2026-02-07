@@ -1,27 +1,10 @@
 package com.br3adjam.midi2noteblocks;
 
 import com.br3adjam.midi2noteblocks.command.TestCommands;
+import com.br3adjam.midi2noteblocks.midi.MidiKeyboard;
 import com.br3adjam.midi2noteblocks.world.TickHandler;
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.commands.CommandBuildContext;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.ServerTickRateManager;
-import net.minecraft.server.WorldLoader;
-import net.minecraft.util.profiling.jfr.event.ServerTickTimeEvent;
-import net.minecraft.util.thread.BlockableEventLoop;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import org.apache.logging.log4j.core.config.plugins.util.ResolverUtil;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.MinecraftServer;
-
-import org.apache.logging.log4j.core.jmx.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
