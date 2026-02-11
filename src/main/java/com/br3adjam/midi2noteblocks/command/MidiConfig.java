@@ -5,6 +5,7 @@ import com.br3adjam.midi2noteblocks.world.RedstoneGeneratorParams;
 import com.br3adjam.midi2noteblocks.world.TickHandler;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -12,12 +13,15 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.*;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.*;
 import net.minecraft.util.*;
 import net.minecraft.network.*;
 import net.minecraft.text.*;
+
+import java.util.function.Supplier;
 
 public class MidiConfig {
     private final CommandDispatcher<ServerCommandSource> dispatcher;
@@ -39,8 +43,8 @@ public class MidiConfig {
     }
 
     private static int sendMesssage(CommandContext<ServerCommandSource> context) {
-        textClickEvent clickEvent = new textClickEvent(textClickEvent.Action.RUN_COMMAND, "/toggleThing");
-        textHoverEvent hoverEvent = new textHoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Toggle the thing"));
+        textClickEvent clickEvent = new textClickEvent(textClickEvent.Action.RUN_COMMAND, "/toggle");
+        textHoverEvent hoverEvent = new textHoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("toggle"));
         Text msg = Text.literal("Click me")
                 .setStyle(Style.EMPTY
                         .withColor(Formatting.AQUA)
@@ -49,7 +53,8 @@ public class MidiConfig {
                         .withHoverEvent(hoverEvent)
                 );
 
-        context.getSource().getPlayer().sendMessage(msg, false);
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        player.sendMessage(Text.literal("test!"), false);
         return 1;
     }
 

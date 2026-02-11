@@ -5,10 +5,8 @@ import net.minecraft.text.MutableText;
 
 public class textHoverEvent implements HoverEvent {
     public textHoverEvent(Action action, MutableText s) {
-        
     }
 
-    @Override
     public Action getAction() {
         return null;
     }

@@ -4,10 +4,8 @@ import net.minecraft.text.ClickEvent;
 
 public class textClickEvent implements ClickEvent {
     public textClickEvent(Action action, String s) {
-
     }
 
-    @Override
     public Action getAction() {
         return null;
     }

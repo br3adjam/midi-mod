@@ -1,5 +1,6 @@
 package com.br3adjam.midi2noteblocks;
 
+import com.br3adjam.midi2noteblocks.command.MidiConfig;
 import com.br3adjam.midi2noteblocks.command.TestCommands;
 import com.br3adjam.midi2noteblocks.midi.MidiKeyboard;
 import com.br3adjam.midi2noteblocks.world.TickHandler;
@@ -25,6 +26,7 @@ public class Midi2noteblocks implements ModInitializer {
 
         TestCommands.register();
         TickHandler.register();
+        MidiConfig.register();
 
         // todo)) add midi
 
